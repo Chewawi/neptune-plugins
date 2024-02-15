@@ -18,7 +18,7 @@ interface CurrentMediaItem {
 }
 
 const unloadables: (() => void)[] = [];
-const clientId = "1130698654987067493";
+const clientId = "1207821369438376026";
 
 const formatLongString = (s: string): string =>
   s.length >= 128 ? s.slice(0, 125) + "..." : s;
@@ -48,7 +48,7 @@ client.then(() => {
       const paused = state.playbackControls.playbackState === "NOT_PLAYING";
 
       console.log('CHECK !!!!', currentMediaItem) // ignore this
-      
+
       rpc.setActivity({
         ...(paused
           ? {
