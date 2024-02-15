@@ -67,6 +67,10 @@ client.then(() => {
         ),
         largeImageKey: albumArtURL,
         largeImageText: formatLongString(currentlyPlaying.album.title as string),
+        buttons: [{
+          label: 'Play on TIDAL',
+          url: currentMediaItem.url
+        }],
       });
     })
   );
