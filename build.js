@@ -12,13 +12,13 @@ for (const plugin of plugins) {
     fs.readFileSync(path.join(pluginPath, "plugin.json"))
   );
 
+  const entryPoint = path.join(pluginPath, pluginManifest.main ?? "index.ts"); // Cambiado a .ts
+
   const outfile = path.join(pluginPath, "dist/index.js");
 
   esbuild
     .build({
-      entryPoints: [
-        "./" + path.join(pluginPath, pluginManifest.main ?? "index.js"),
-      ],
+      entryPoints: [entryPoint],
       bundle: true,
       minify: true,
       format: "esm",
@@ -31,6 +31,7 @@ for (const plugin of plugins) {
       ],
       platform: "browser",
       outfile,
+      loader: { ".ts": "ts", ".tsx": "tsx" }, // Configuración para manejar archivos TypeScript
     })
     .then(() => {
       fs.createReadStream(outfile)
