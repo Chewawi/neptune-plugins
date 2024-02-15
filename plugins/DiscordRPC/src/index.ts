@@ -47,6 +47,8 @@ client.then(() => {
 
       const paused = state.playbackControls.playbackState === "NOT_PLAYING";
 
+      console.log('CHECK !!!!', currentMediaItem) // ignore this
+      
       rpc.setActivity({
         ...(paused
           ? {
@@ -55,7 +57,7 @@ client.then(() => {
             }
           : {
               smallImageText: "CHEWAWI IS THE GOAT!",
-              smallImageKey: "tidal",
+              smallImageKey: "tidal-icon",
               startTimestamp: now,
               endTimestamp: remaining,
             }),
