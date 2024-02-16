@@ -52,22 +52,6 @@ client.then(() => {
 
       const videoCover = currentlyPlaying.album.videoCover;
 
-      if (videoCover) {
-        const options = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "apy-token":
-              "APY0wp5iKjO2USfm7B7P1wzNa4e0Lnp4BC8ja0FaQTix0dbwAdfjEicwiyW5oXt6yg7o7FtiJsLW",
-          },
-          body: `{"size":"80x80","duration":"10","video_url":"${videoCover}"}`,
-        };
-
-        fetch("https://api.apyhub.com/generate/gif/url", options)
-          .then((res) => res.json())
-          .then((json) => albumArtURL = json.url);
-      }
-
       rpc.setActivity({
         ...(paused
           ? {
@@ -84,7 +68,7 @@ client.then(() => {
         state: formatLongString(
           "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
         ),
-        largeImageKey: albumArtURL,
+        largeImageKey: videoCover ? `https://t-artwork.obelous.com/artwork/${videoCover}.gif` : albumArtURL,
         largeImageText: formatLongString(
           currentlyPlaying.album.title as string
         ),
