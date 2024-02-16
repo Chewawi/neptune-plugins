@@ -10,6 +10,7 @@ interface CurrentlyPlaying {
   duration: number;
   artists: Artists;
   title: string;
+  url: string;
 }
 
 interface CurrentMediaItem {
@@ -68,16 +69,22 @@ client.then(() => {
         state: formatLongString(
           "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
         ),
-        largeImageKey: videoCover ? `https://t-artwork.obelous.com/artwork/${videoCover}.gif` : albumArtURL,
+        largeImageKey: videoCover
+          ? `https://t-artwork.obelous.com/artwork/${videoCover}.gif`
+          : albumArtURL,
         largeImageText: formatLongString(
           currentlyPlaying.album.title as string
         ),
-        // buttons: [
-        //   {
-        //     label: "Play on TIDAL",
-        //     url: currentMediaItem.url,
-        //   },
-        // ],
+        ...(currentlyPlaying.url
+          ? {
+              buttons: [
+                {
+                  label: "Play on TIDAL",
+                  url: currentlyPlaying.url,
+                },
+              ],
+            }
+          : {}),
       });
     })
   );
