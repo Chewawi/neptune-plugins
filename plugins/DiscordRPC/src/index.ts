@@ -32,12 +32,13 @@ client.then(() => {
     intercept("playbackControls/TIME_UPDATE", ([current]: [number]) => {
       const state = store.getState();
 
-      const { item: currentlyPlaying, type: mediaType }: CurrentMediaItem = currentMediaItem;
+      const { item: currentlyPlaying, type: mediaType }: CurrentMediaItem =
+        currentMediaItem;
 
       // TODO: add video support
       if (mediaType !== "track") return;
 
-      const albumArtURL = getMediaURLFromID(currentlyPlaying.album.cover);
+      let albumArtURL = getMediaURLFromID(currentlyPlaying.album.cover);
 
       const date = new Date();
       const now = (date.getTime() / 1000) | 0;
@@ -47,7 +48,25 @@ client.then(() => {
 
       const paused = state.playbackControls.playbackState === "NOT_PLAYING";
 
-      console.log('CHECK !!!!', currentMediaItem) // ignore this
+      console.log("CHECK !!!!", currentlyPlaying); // ignore this
+
+      const videoCover = currentlyPlaying.album.videoCover;
+
+      if (videoCover) {
+        const options = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apy-token":
+              "APY0wp5iKjO2USfm7B7P1wzNa4e0Lnp4BC8ja0FaQTix0dbwAdfjEicwiyW5oXt6yg7o7FtiJsLW",
+          },
+          body: `{"size":"80x80","duration":"10","video_url":"${videoCover}"}`,
+        };
+
+        fetch("https://api.apyhub.com/generate/gif/url", options)
+          .then((res) => res.json())
+          .then((json) => albumArtURL = json.url);
+      }
 
       rpc.setActivity({
         ...(paused
@@ -66,11 +85,15 @@ client.then(() => {
           "by " + currentlyPlaying.artists.map((a) => a.name).join(", ")
         ),
         largeImageKey: albumArtURL,
-        largeImageText: formatLongString(currentlyPlaying.album.title as string),
-        buttons: [{
-          label: 'Play on TIDAL',
-          url: currentMediaItem.url
-        }],
+        largeImageText: formatLongString(
+          currentlyPlaying.album.title as string
+        ),
+        // buttons: [
+        //   {
+        //     label: "Play on TIDAL",
+        //     url: currentMediaItem.url,
+        //   },
+        // ],
       });
     })
   );
